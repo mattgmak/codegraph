@@ -36,7 +36,7 @@
               src = ./.;
               # Update after package-lock.json changes:
               #   nix run nixpkgs#prefetch-npm-deps -- package-lock.json
-              hash = "sha256-GJfqzykgrgD/KCtf8LupRw31S2cCmwGCF/0PMpzaCrk=";
+              hash = "sha256-7cGlc4q+9DoPsyPDos5BfE9n2Qmvlvl8QEDiD/y6+e0=";
             };
 
             inherit nodejs;
