@@ -15,6 +15,12 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: nixpkgs.legacyPackages.${system});
+
+      # Resolve the repo root to a stable store path NAME'd "source" — the
+      # same name the flake input fetch uses — so `./.` references below reuse
+      # the already-fetched flake source instead of copying the whole tree to
+      # the store again ("Copying ... to the store again" warning).
+      source = builtins.path { path = ./.; name = "source"; };
     in
     {
       packages = forAllSystems (system:
@@ -28,12 +34,12 @@
           codegraph = pkgs.buildNpmPackage {
             pname = "codegraph";
             version =
-              (builtins.fromJSON (builtins.readFile ./package.json)).version;
+              (builtins.fromJSON (builtins.readFile "${source}/package.json")).version;
 
-            src = ./.;
+            src = source;
 
             npmDeps = pkgs.fetchNpmDeps {
-              src = ./.;
+              src = source;
               # Update after package-lock.json changes:
               #   nix run nixpkgs#prefetch-npm-deps -- package-lock.json
               hash = "sha256-7cGlc4q+9DoPsyPDos5BfE9n2Qmvlvl8QEDiD/y6+e0=";
